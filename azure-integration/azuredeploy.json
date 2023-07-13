@@ -38,58 +38,17 @@
             "type": "int",
             "defaultValue": "[length(parameters('subscriptionsList'))]"
         },
-        "datadogApplicationKey": {
+        "LightlyticsApiKey": {
             "type": "secureString",
             "metadata": {
-                "description": "Your Datadog Application key"
+                "description": "Your Lightlytics API key"
             }
         },
-        "datadogApiKey": {
-            "type": "secureString",
-            "metadata": {
-                "description": "Your Datadog API key"
-            }
-        },
-        "hostFilters": {
-            "type": "string",
-            "defaultValue": "",
-            "metadata": {
-                "description": "Filter to include/exclude hosts"
-            }
-        },
-        "appServicePlanFilters": {
-            "defaultValue": "",
+        "LightlyticsUrl": {
             "type": "String",
+            "defaultValue": "app.lightlytics com",
             "metadata": {
-                "description": "Filter to include/exclude app_service_plan"
-            }
-        },
-        "automute": {
-            "type": "bool",
-            "defaultValue": true,
-            "metadata": {
-                "description": "Whether or not to use automute for hosts"
-            }
-        },
-        "cspm_enabled": {
-            "type": "bool",
-            "defaultValue": true,
-            "metadata": {
-                "description": "Collect resources for Cloud Security Posture Management"
-            }
-        },
-        "custom_metrics_enabled": {
-            "type": "bool",
-            "defaultValue": false,
-            "metadata": {
-                "description": "Whether or not to use custom metrics"
-            }
-        },
-        "datadogSite": {
-            "type": "String",
-            "defaultValue": "datadoghq.com",
-            "metadata": {
-                "description": "The datadog site, e.g. eu1.datadoghq.com"
+                "description": "The Lightlytics url"
             }
         },
         "newguid": {
