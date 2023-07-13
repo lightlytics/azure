@@ -54,7 +54,7 @@
                 "type": "Microsoft.Common.ServicePrincipalSelector",
                 "label": {
                   "servicePrincipalId": "Service Principal Id",
-                  "password": "Client secret",
+                  "input": "Client secret",
                   "sectionHeader": "Service Principal"
                 },
                 "toolTip": {
@@ -145,13 +145,34 @@
       }
     ],
     "outputs": {
-      "location": "[location()]",
-      "servicePrincipalClientId": "[steps('servicePrincipal').createAppReg.ServicePrincipal.appId]",
-      "servicePrincipalObjectId": "[first(steps('servicePrincipal').createAppReg.ServicePrincipal.objectId)]",
-      "servicePrincipalClientSecret": "[steps('servicePrincipal').createAppReg.ServicePrincipal.password]",
-      "subscriptionsList": "[steps('LightlyticsConfig').integrationConfig.subscriptionsList]",
-      "LightlyticsApiKey": "[steps('LightlyticsConfig').lightlyticsIntegration.LightlyticsApiKey]",
-      "LightlyticsUrl": "[steps('LightlyticsConfig').lightlyticsIntegration.LightlyticsUrl]"
+      "location": {
+        "type": "string",
+        "value": "[location()]"
+      },
+      "servicePrincipalClientId": {
+        "type": "string",
+        "value": "[steps('servicePrincipal').createAppReg.ServicePrincipal.appId]"
+      },
+      "servicePrincipalObjectId": {
+        "type": "string",
+        "value": "[first(steps('servicePrincipal').createAppReg.ServicePrincipal.objectId)]"
+      },
+      "servicePrincipalClientSecret": {
+        "type": "securestring",
+        "value": "[steps('servicePrincipal').createAppReg.ServicePrincipal.password]"
+      },
+      "subscriptionsList": {
+        "type": "array",
+        "value": "[steps('LightlyticsConfig').integrationConfig.subscriptionsList]"
+      },
+      "LightlyticsApiKey": {
+        "type": "securestring",
+        "value": "[steps('LightlyticsConfig').lightlyticsIntegration.LightlyticsApiKey]"
+      },
+      "LightlyticsUrl": {
+        "type": "string",
+        "value": "[steps('LightlyticsConfig').lightlyticsIntegration.LightlyticsUrl]"
+      }
     }
   }
 }
