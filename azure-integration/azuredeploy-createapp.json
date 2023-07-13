@@ -144,13 +144,6 @@
     "subscriptionCount": {
       "type": "int",
       "value": "[parameters('subscriptionCount')]"
-    },
-    "appRegistrationNames": {
-      "type": "array",
-      "value": "[concat(variables('appRegistrationName'), copyIndex())]",
-      "copy": {
-        "count": "[length(parameters('subscriptionsList'))]"
-      }
     }
   }
 }
