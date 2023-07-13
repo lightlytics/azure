@@ -101,16 +101,9 @@
               },
               {
                 "name": "LightlyticsApiKey",
-                "type": "Microsoft.Common.PasswordBox",
+                "type": "Microsoft.Common.TextBox",
                 "label": "Lightlytics API token",
                 "toolTip": "Your Lightlytics API key",
-                "constraints": {
-                  "required": true,
-                  "validationMessage": "Must be a valid API Key"
-                },
-                "options": {
-                  "hideConfirmation": true
-                },
                 "visible": true
               },
               {
