@@ -46,7 +46,7 @@
                 "visible": true,
                 "options": {
                   "icon": "Info",
-                  "text": "The following steps involve navigating away from this template. Please read them carefully before continuing.\n\n1. Select the option to create a new app registration and click 'Change Selection'.\n2. Give it a name and select any account type.\n3. Click 'Register'. This will open a new page to create a client secret.\n4. Click ‘+ New Client Secret’ to add a Client Secret.\n5. Copy the value of the Client Secret.\n6. Click the close (X) button in the top-right corner to return to this template screen.\n7. Paste the value of the Client Secret in the corresponding field on this template."
+                  "text": "The following steps involve navigating away from this template. Please read them carefully before continuing.\n\n1. Select the option to create a new app registration, and click 'Change Selection'.\n2. Give it a name and select any account type.\n3. Click 'Register'. This will open a new page to create a client secret.\n4. Click ‘+ New Client Secret’ to add a Client Secret.\n5. Copy the Value of the Client Secret.\n6. Click the close (X) button in the top-right corner to return to this template screen.\n7 Paste the value of the Client Secret in the corresponding field on this template."
                 }
               },
               {
@@ -54,7 +54,7 @@
                 "type": "Microsoft.Common.ServicePrincipalSelector",
                 "label": {
                   "servicePrincipalId": "Service Principal Id",
-                  "password": "Client Secret",
+                  "password": "Client secret",
                   "sectionHeader": "Service Principal"
                 },
                 "toolTip": {
@@ -62,7 +62,7 @@
                 },
                 "defaultValue": {
                   "principalId": "<default guid>",
-                  "name": "(New) Default App Id"
+                  "name": "(New) default App Id"
                 },
                 "constraints": {
                   "required": true,
@@ -85,7 +85,7 @@
           {
             "name": "lightlyticsIntegration",
             "type": "Microsoft.Common.Section",
-            "label": "Lightlytics Integration",
+            "label": "Datadog Organization",
             "elements": [
               {
                 "name": "textBlock1",
@@ -102,7 +102,7 @@
               {
                 "name": "LightlyticsApiKey",
                 "type": "Microsoft.Common.TextBox",
-                "label": "Lightlytics API Token",
+                "label": "Lightlytics API token",
                 "toolTip": "Your Lightlytics API key",
                 "visible": true
               },
@@ -111,7 +111,7 @@
                 "type": "Microsoft.Common.TextBox",
                 "label": "Lightlytics URL",
                 "defaultValue": "app.lightlytics.com",
-                "toolTip": "Your Lightlytics URL",
+                "toolTip": "Your Lightlytics url",
                 "visible": true
               }
             ],
@@ -125,15 +125,15 @@
               {
                 "name": "subscriptionsList",
                 "type": "Microsoft.Common.DropDown",
-                "label": "Subscriptions to Monitor",
+                "label": "Subscriptions to monitor",
                 "toolTip": "The list of subscriptions to monitor",
                 "filterPlaceholder": "Select one or more subscriptions to monitor",
                 "filter": true,
                 "multiselect": true,
                 "selectAll": true,
-                "defaultValue": "[map(filter(steps('basics').armio.value, (i) => and(not(equals(i.type, 'Microsoft.Management/managementGroups')), not(and(equals(i.properties.permissions, 'noaccess'), equals(i.properties.inheritedPermissions, 'noaccess')))))), (item) => item.properties.displayName)]",
+                "defaultValue": "[map(filter(steps('basics').armio.value,(i) => and(not(equals(i.type,'Microsoft.Management/managementGroups')),not(and(equals(i.properties.permissions,'noaccess'),equals(i.properties.inheritedPermissions,'noaccess'))))),(item) => item.properties.displayName)]",
                 "constraints": {
-                  "allowedValues": "[map(filter(steps('basics').armio.value, (i) => and(not(equals(i.type, 'Microsoft.Management/managementGroups')), not(and(equals(i.properties.permissions, 'noaccess'), equals(i.properties.inheritedPermissions, 'noaccess')))))), (item) => parse(concat('{\"label\":\"', item.properties.displayName, '\",\"value\":\"', item.name, '\"}')))]",
+                  "allowedValues": "[map(filter(steps('basics').armio.value, (i)=>and(   not(equals(i.type, 'Microsoft.Management/managementGroups')),   not(and(equals(i.properties.permissions, 'noaccess'),equals(i.properties.inheritedPermissions, 'noaccess')))  )), (item)=> parse(concat('{\"label\":\"', item.properties.displayName, '\",\"value\":\"', item.name, '\"}')))]",
                   "required": false
                 },
                 "visible": true
@@ -145,34 +145,13 @@
       }
     ],
     "outputs": {
-      "location": {
-        "type": "string",
-        "value": "[location()]"
-      },
-      "servicePrincipalClientId": {
-        "type": "string",
-        "value": "[steps('servicePrincipal').createAppReg.ServicePrincipal.appId]"
-      },
-      "servicePrincipalObjectId": {
-        "type": "string",
-        "value": "[first(steps('servicePrincipal').createAppReg.ServicePrincipal.objectId)]"
-      },
-      "servicePrincipalClientSecret": {
-        "type": "securestring",
-        "value": "[steps('servicePrincipal').createAppReg.ServicePrincipal.password]"
-      },
-      "subscriptionsList": {
-        "type": "array",
-        "value": "[steps('LightlyticsConfig').integrationConfig.subscriptionsList]"
-      },
-      "LightlyticsApiKey": {
-        "type": "securestring",
-        "value": "[steps('LightlyticsConfig').lightlyticsIntegration.LightlyticsApiKey]"
-      },
-      "LightlyticsUrl": {
-        "type": "string",
-        "value": "[steps('LightlyticsConfig').lightlyticsIntegration.LightlyticsUrl]"
-      }
+      "location": "[location()]",
+      "servicePrincipalClientId": "[steps('servicePrincipal').createAppReg.ServicePrincipal.appId]",
+      "servicePrincipalObjectId": "[first(steps('servicePrincipal').createAppReg.ServicePrincipal.objectId)]",
+      "servicePrincipalClientSecret": "[steps('servicePrincipal').createAppReg.ServicePrincipal.password]",
+      "subscriptionsList": "[steps('LightlyticsConfig').integrationConfig.subscriptionsList]",
+      "LightlyticsApiKey": "[steps('LightlyticsConfig').lightlyticsIntegration.LightlyticsApiKey]",
+      "LightlyticsUrl": "[steps('LightlyticsConfig').lightlyticsIntegration.LightlyticsUrl]"
     }
   }
 }
