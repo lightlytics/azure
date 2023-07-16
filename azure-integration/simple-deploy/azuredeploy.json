@@ -1,0 +1,120 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "type": "string",
+            "defaultValue": "westus2",
+            "metadata": {
+                "description": "Resources location"
+            }
+        },
+        "servicePrincipalObjectId": {
+            "type": "String",
+            "metadata": {
+                "description": "Service principal object Id, needed for Role Assignment"
+            }
+        },
+        "servicePrincipalClientId": {
+            "type": "String",
+            "metadata": {
+                "description": "Service principal Client Id"
+            }
+        },
+        "servicePrincipalClientSecret": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Service principal client secret"
+            }
+        },
+        "subscriptionsList": {
+            "type": "array",
+            "defaultValue": "[subscription().id]",
+            "metadata": {
+                "description": "Subscriptions list to monitor"
+            }
+        },
+        "subscriptionCount": {
+            "type": "int",
+            "defaultValue": "[length(parameters('subscriptionsList'))]"
+        },
+        "LightlyticsApiKey": {
+            "type": "secureString",
+            "metadata": {
+                "description": "Your Lightlytics API key"
+            }
+        },
+        "LightlyticsUrl": {
+            "type": "String",
+            "defaultValue": "app.lightlytics com",
+            "metadata": {
+                "description": "The Lightlytics url"
+            }
+        },
+        "newguid": {
+            "type": "string",
+            "defaultValue": "[newGuid()]",
+            "metadata": {
+                "description": "Just a Guid to append to deployment script name"
+            }
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "copy": {
+                "name": "subscriptionsTemplateCopy",
+                "count": "[length(parameters('subscriptionsList'))]",
+                "mode": "Parallel"
+            },
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2021-04-01",
+            "name": "[concat('roleAssignSubsTpl-', parameters('newguid'), copyIndex())]",
+            "properties": {
+                "mode": "Incremental",
+                "expressionEvaluationOptions": {
+                    "scope": "inner"
+                },
+                "parameters": {
+                    "servicePrincipalObjectId": {
+                        "value": "[parameters('servicePrincipalObjectId')]"
+                    }
+                },
+                "template": {
+                    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+                    "contentVersion": "1.0.0.0",
+                    "parameters": {
+                        "servicePrincipalObjectId": {
+                            "type": "String",
+                            "metadata": {
+                                "description": "Service principal object Id, needed for Role Assignment"
+                            }
+                        }
+                    },
+                    "variables": {},
+                    "resources": [
+                        {
+                            "type": "Microsoft.Authorization/roleAssignments",
+                            "apiVersion": "2020-10-01-preview",
+                            "name": "[guid(subscription().id, 'lightlytics reader', parameters('servicePrincipalObjectId'))]",
+                            "properties": {
+                                "roleDefinitionId": "[concat(subscription().id, '/providers/Microsoft.Authorization/roleDefinitions/', '43d0d8ad-25c7-4714-9337-8ba259a9fe05')]",
+                                "principalId": "[parameters('servicePrincipalObjectId')]",
+                                "principalType": "ServicePrincipal"
+                            }
+                        }
+                    ],
+                    "outputs": {}
+                }
+            },
+            "subscriptionId": "[parameters('subscriptionsList')[copyIndex()]]",
+            "location": "[parameters('location')]"
+        }
+    ],
+    "outputs": {
+        "subscriptionCount": {
+            "type": "int",
+            "value": "[parameters('subscriptionCount')]"
+        }
+    }
+}

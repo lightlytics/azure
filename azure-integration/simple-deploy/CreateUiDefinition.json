@@ -1,0 +1,157 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
+  "handler": "Microsoft.Azure.CreateUIDef",
+  "version": "0.1.2-preview",
+  "parameters": {
+    "basics": [
+      {
+        "name": "location",
+        "type": "Microsoft.Common.TextBox",
+        "label": "Location",
+        "defaultValue": "global",
+        "toolTip": "Resources location",
+        "visible": false
+      },
+      {
+        "name": "infoBox1",
+        "type": "Microsoft.Common.InfoBox",
+        "visible": true,
+        "options": {
+          "icon": "Info",
+          "text": "The selections above define where this template will be deployed. It has no impact on which subscriptions will be monitored by Lightlytics. You will define the subscription(s) you would like to monitor with Lightlytics in the 'Lightlytics Configuration' tab."
+        }
+      },
+      {
+        "name": "armio",
+        "type": "Microsoft.Solutions.ArmApiControl",
+        "request": {
+          "method": "POST",
+          "path": "/providers/Microsoft.Management/getEntities?api-version=2020-05-01"
+        }
+      }
+    ],
+    "steps": [
+      {
+        "name": "servicePrincipal",
+        "label": "Service Principal",
+        "elements": [
+          {
+            "name": "createAppReg",
+            "type": "Microsoft.Common.Section",
+            "label": "Create Lightlytics App Registration",
+            "elements": [
+              {
+                "name": "infoBox1",
+                "type": "Microsoft.Common.InfoBox",
+                "visible": true,
+                "options": {
+                  "icon": "Info",
+                  "text": "The following steps involve navigating away from this template. Please read them carefully before continuing.\n\n1. Select the option to create a new app registration, and click 'Change Selection'.\n2. Give it a name and select any account type.\n3. Click 'Register'. This will open a new page to create a client secret.\n4. Click ‘+ New Client Secret’ to add a Client Secret.\n5. Copy the Value of the Client Secret.\n6. Click the close (X) button in the top-right corner to return to this template screen.\n7 Paste the value of the Client Secret in the corresponding field on this template."
+                }
+              },
+              {
+                "name": "ServicePrincipal",
+                "type": "Microsoft.Common.ServicePrincipalSelector",
+                "label": {
+                  "servicePrincipalId": "Service Principal Id",
+                  "password": "Client secret",
+                  "sectionHeader": "Service Principal"
+                },
+                "toolTip": {
+                  "servicePrincipalId": "Service Principal Id"
+                },
+                "defaultValue": {
+                  "principalId": "<default guid>",
+                  "name": "(New) default App Id"
+                },
+                "constraints": {
+                  "required": true,
+                  "validationMessage": "Must be a valid client secret"
+                },
+                "options": {
+                  "hideCertificate": true
+                },
+                "visible": true
+              }
+            ],
+            "visible": true
+          }
+        ]
+      },
+      {
+        "name": "LightlyticsConfig",
+        "label": "Lightlytics Configuration",
+        "elements": [
+          {
+            "name": "lightlyticsIntegration",
+            "type": "Microsoft.Common.Section",
+            "label": "Datadog Organization",
+            "elements": [
+              {
+                "name": "textBlock1",
+                "type": "Microsoft.Common.TextBlock",
+                "visible": true,
+                "options": {
+                  "text": "Lightlytics Text",
+                  "link": {
+                    "label": "Learn more",
+                    "uri": "https://lightlytics.com"
+                  }
+                }
+              },
+              {
+                "name": "LightlyticsApiKey",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Lightlytics API token",
+                "toolTip": "Your Lightlytics API key",
+                "visible": true
+              },
+              {
+                "name": "LightlyticsUrl",
+                "type": "Microsoft.Common.TextBox",
+                "label": "Lightlytics URL",
+                "defaultValue": "app.lightlytics.com",
+                "toolTip": "Your Lightlytics url",
+                "visible": true
+              }
+            ],
+            "visible": true
+          },
+          {
+            "name": "integrationConfig",
+            "type": "Microsoft.Common.Section",
+            "label": "Integration Configuration",
+            "elements": [
+              {
+                "name": "subscriptionsList",
+                "type": "Microsoft.Common.DropDown",
+                "label": "Subscriptions to monitor",
+                "toolTip": "The list of subscriptions to monitor",
+                "filterPlaceholder": "Select one or more subscriptions to monitor",
+                "filter": true,
+                "multiselect": true,
+                "selectAll": true,
+                "defaultValue": "[map(filter(steps('basics').armio.value,(i) => and(not(equals(i.type,'Microsoft.Management/managementGroups')),not(and(equals(i.properties.permissions,'noaccess'),equals(i.properties.inheritedPermissions,'noaccess'))))),(item) => item.properties.displayName)]",
+                "constraints": {
+                  "allowedValues": "[map(filter(steps('basics').armio.value, (i)=>and(   not(equals(i.type, 'Microsoft.Management/managementGroups')),   not(and(equals(i.properties.permissions, 'noaccess'),equals(i.properties.inheritedPermissions, 'noaccess')))  )), (item)=> parse(concat('{\"label\":\"', item.properties.displayName, '\",\"value\":\"', item.name, '\"}')))]",
+                  "required": false
+                },
+                "visible": true
+              }
+            ],
+            "visible": true
+          }
+        ]
+      }
+    ],
+    "outputs": {
+      "location": "[location()]",
+      "servicePrincipalClientId": "[steps('servicePrincipal').createAppReg.ServicePrincipal.appId]",
+      "servicePrincipalObjectId": "[first(steps('servicePrincipal').createAppReg.ServicePrincipal.objectId)]",
+      "servicePrincipalClientSecret": "[steps('servicePrincipal').createAppReg.ServicePrincipal.password]",
+      "subscriptionsList": "[steps('LightlyticsConfig').integrationConfig.subscriptionsList]",
+      "LightlyticsApiKey": "[steps('LightlyticsConfig').lightlyticsIntegration.LightlyticsApiKey]",
+      "LightlyticsUrl": "[steps('LightlyticsConfig').lightlyticsIntegration.LightlyticsUrl]"
+    }
+  }
+}
