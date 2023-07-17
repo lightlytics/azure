@@ -124,7 +124,7 @@
                     },
                     {
                         "name": "subscription_list",
-                        "secureValue": "[parameters('subscriptionsList')]"
+                        "secureValue": "[string(join(parameters('subscriptionsList'), ','))]"
                     },
                     {
                         "name": "clientId",
