@@ -156,7 +156,7 @@
                 "containerSettings": {},
                 "cleanupPreference": "Always",
                 "azPowerShellVersion": "8.1",
-                "scriptContent": "Invoke-WebRequest -SkipCertificateCheck -ContentType \"application/json\" -Method Post -Uri \"https://$Env:LightlyticsUrl/azure/account-acknowledge\" -Headers @{\"Accept\"=\"application/json\";\"Authorization\"=\"Bearer $Env:LightlyticsApiKey\"} -Body (@{\"client_id\"=$Env:clientId; \"account_type\"=\"Azure\"; \"client_secret\"=$Env:clientSecret; \"tenant_id\"=$Env:tenantName; \"subscription_list\"=$Env:subscription_list} | ConvertTo-Json )"
+                "scriptContent": "Invoke-WebRequest -SkipCertificateCheck -ContentType \"application/json\" -Method Post -Uri \"https://$Env:LightlyticsUrl/azure/account-acknowledge\" -Headers @{\"Accept\"=\"application/json\";\"Authorization\"=\"Bearer $Env:LightlyticsApiKey\"} -Body (@{\"client_id\"=$Env:clientId; \"account_type\"=\"Azure\"; \"client_secret\"=$Env:clientSecret; \"tenant_id\"=$Env:tenantName; \"subscriptions_list\"=$Env:subscription_list} | ConvertTo-Json )"
             }
         }
     ],
