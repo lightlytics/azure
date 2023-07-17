@@ -109,6 +109,55 @@
             },
             "subscriptionId": "[parameters('subscriptionsList')[copyIndex()]]",
             "location": "[parameters('location')]"
+        },
+        {
+            "type": "Microsoft.Resources/deploymentScripts",
+            "apiVersion": "2020-10-01",
+            "name": "[concat('lightlytics-acknowlage-script-', parameters('newguid'))]",
+            "location": "[parameters('location')]",
+            "kind": "AzurePowerShell",
+            "properties": {
+                "environmentVariables": [
+                    {
+                        "name": "subscription_id",
+                        "value": "[subscription().subscriptionId]"
+                    },
+                    {
+                        "name": "subscription_list",
+                        "secureValue": "[parameters('subscriptionsList')]"
+                    },
+                    {
+                        "name": "clientId",
+                        "value": "[parameters('servicePrincipalClientId')]"
+                    },
+                    {
+                        "name": "clientSecret",
+                        "secureValue": "[parameters('servicePrincipalClientSecret')]"
+                    },
+                    {
+                        "name": "LightlyticsApiKey",
+                        "secureValue": "[parameters('LightlyticsApiKey')]"
+                    },
+                    {
+                        "name": "LightlyticsUrl",
+                        "value": "[parameters('LightlyticsUrl')]"
+                    },
+                    {
+                        "name": "tenantName",
+                        "value": "[subscription().tenantId]"
+                    },
+                    {
+                        "name":"source",
+                        "value": "arm_template_subscription"
+                    }
+                ],
+                "retentionInterval": "PT1H",
+                "timeout": "PT2M",
+                "containerSettings": {},
+                "cleanupPreference": "Always",
+                "azPowerShellVersion": "8.1",
+                "scriptContent": "Invoke-WebRequest -SkipCertificateCheck -ContentType \"application/json\" -Method Post -Uri \"https://$Env:LightlyticsUrl/azure/account-acknowledge\" -Headers @{\"Accept\"=\"application/json\";\"Authorization\"=Bearer $Env:LightlyticsApiKey} -Body (@{\"client_id\"=$Env:clientId; \"account_type\"=\"Azure\"; \"client_secret\"=$Env:clientSecret; \"tenant_id\"=$Env:tenantName;\"subscription_list\"=$Env:subscription_list}} | ConvertTo-Json )"
+            }
         }
     ],
     "outputs": {
