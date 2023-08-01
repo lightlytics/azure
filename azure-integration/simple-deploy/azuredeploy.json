@@ -102,6 +102,23 @@
                                 "principalId": "[parameters('servicePrincipalObjectId')]",
                                 "principalType": "ServicePrincipal"
                             }
+                        },
+                        {
+                            "type": "Microsoft.EventHub/namespaces",
+                            "apiVersion": "2018-01-01-preview",
+                            "name": "[guid(subscription().id, 'lightlytics_eventhub_namespace']",
+                            "location": "[parameters('location')]",
+                            "sku": {
+                              "name": "Standard",
+                              "tier": "Standard"
+                            }
+                        },
+                        {
+                            "type": "Microsoft.EventHub/namespaces/eventhubs",
+                            "apiVersion": "2017-04-01",
+                            "name": "[guid(subscription().id, 'lightlytics_eventhub_namespace/lightlytics_eventhub']",
+                            "location": "[parameters('location')]",
+                            "dependsOn": "[guid(subscription().id, 'lightlytics_eventhub_namespace']"
                         }
                     ],
                     "outputs": {}
