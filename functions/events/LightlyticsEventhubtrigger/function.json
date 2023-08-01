@@ -3,7 +3,7 @@
   "bindings": [
     {
       "type": "eventHubTrigger",
-      "name": "event",
+      "name": "events",
       "direction": "in",
       "eventHubName": "cloud-events",
       "connection": "moradiv_listentocloudevents_EVENTHUB",
