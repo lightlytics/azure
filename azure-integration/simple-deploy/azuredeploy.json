@@ -106,7 +106,7 @@
                         {
                             "type": "Microsoft.EventHub/namespaces",
                             "apiVersion": "2018-01-01-preview",
-                            "name": "[guid(subscription().id, 'lightlytics_eventhub_namespace']",
+                            "name": "[concat('lightlytics_eventhub_namespace_', subscription().subscriptionId)]",
                             "location": "[parameters('location')]",
                             "sku": {
                               "name": "Standard",
@@ -116,9 +116,9 @@
                         {
                             "type": "Microsoft.EventHub/namespaces/eventhubs",
                             "apiVersion": "2017-04-01",
-                            "name": "[guid(subscription().id, 'lightlytics_eventhub_namespace/lightlytics_eventhub']",
+                            "name": "[concat('lightlytics_eventhub_', subscription().subscriptionId)]",
                             "location": "[parameters('location')]",
-                            "dependsOn": "[guid(subscription().id, 'lightlytics_eventhub_namespace']"
+                            "dependsOn": "[concat('lightlytics_eventhub_namespace_', subscription().subscriptionId)]"
                         }
                     ],
                     "outputs": {}
