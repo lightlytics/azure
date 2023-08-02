@@ -104,16 +104,6 @@
                                 "principalId": "[parameters('servicePrincipalObjectId')]",
                                 "principalType": "ServicePrincipal"
                             }
-                        },
-                        {
-                            "type": "Microsoft.EventHub/namespaces",
-                            "apiVersion": "2021-11-01",
-                            "name": "[concat('lleventhubnamespace', uniqueString(subscription().subscriptionId))]",
-                            "sku": {
-                                "name": "Standard",
-                                "tier": "Standard",
-                                "capacity": 1
-                            }
                         }
                     ],
                     "outputs": {}
@@ -121,6 +111,27 @@
             },
             "subscriptionId": "[parameters('subscriptionsList')[copyIndex()]]",
             "location": "[parameters('location')]"
+        },
+        {
+            "copy": {
+              "name": "namespaceCopy",
+              "count": "[length(parameters('subscriptionsList'))]",
+              "mode": "Parallel"
+            },
+            "type": "Microsoft.EventHub/namespaces",
+            "apiVersion": "2021-11-01",
+            "name": "[concat('lleventhubnamespace', uniqueString(parameters('subscriptionsList')[copyIndex()]))]",
+            "location": "[parameters('location')]",
+            "sku": {
+              "name": "Standard",
+              "tier": "Standard",
+              "capacity": 1
+            },
+            "properties": {
+                "isAutoInflateEnabled": false,
+                "maximumThroughputUnits": 0
+            },
+            "subscriptionId": "[parameters('subscriptionsList')[copyIndex()]]"
         },
         {
             "type": "Microsoft.Resources/deploymentScripts",
