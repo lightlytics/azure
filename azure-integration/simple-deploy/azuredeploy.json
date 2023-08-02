@@ -120,7 +120,7 @@
             },
             "type": "Microsoft.EventHub/namespaces",
             "apiVersion": "2021-11-01",
-            "name": "[concat('lleventhubnamespace', uniqueString(parameters('subscriptionsList')[copyIndex()]))]",
+            "name": "lleventhub_namepsace",
             "location": "[parameters('location')]",
             "sku": {
               "name": "Standard",
