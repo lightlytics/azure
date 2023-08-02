@@ -108,7 +108,7 @@
                         {
                             "type": "Microsoft.EventHub/namespaces",
                             "apiVersion": "2018-01-01-preview",
-                            "name": "[variables('eventHubNamespaceName')]",
+                            "name": "lleventhubnamespace",
                             "sku": {
                               "name": "Standard",
                               "tier": "Standard"
@@ -117,10 +117,8 @@
                         {
                             "type": "Microsoft.EventHub/namespaces/eventhubs",
                             "apiVersion": "2017-04-01",
-                            "name": "lightlytics_eventhub",
-                            "dependsOn": [
-                                "[variables('eventHubNamespaceName')]"
-                            ]
+                            "name": "lleventhubnamespace/lightlytics_eventhub",
+                            "dependsOn": ["lleventhubnamespace"]
                         }
                     ],
                     "outputs": {}
