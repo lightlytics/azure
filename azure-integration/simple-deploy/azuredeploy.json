@@ -117,9 +117,9 @@
                         {
                             "type": "Microsoft.EventHub/namespaces/eventhubs",
                             "apiVersion": "2017-04-01",
-                            "name": "[variables('eventHubNamespaceName')]",
+                            "name": "lightlytics_eventhub",
                             "dependsOn": [
-                                "[concat('Microsoft.EventHub/namespaces/lightlytics_eventhub_namespace_', subscription().subscriptionId)]"
+                                "[variables('eventHubNamespaceName')]"
                             ]
                         }
                     ],
