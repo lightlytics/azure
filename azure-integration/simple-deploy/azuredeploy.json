@@ -108,17 +108,19 @@
                         {
                             "type": "Microsoft.EventHub/namespaces",
                             "apiVersion": "2018-01-01-preview",
-                            "name": "lleventhubnamespace",
+                            "name": "[concat('lleventhubnamespace', uniqueString(subscription().subscriptionId))]",
                             "sku": {
-                              "name": "Standard",
-                              "tier": "Standard"
+                                "name": "Standard",
+                                "tier": "Standard"
                             }
                         },
                         {
                             "type": "Microsoft.EventHub/namespaces/eventhubs",
                             "apiVersion": "2017-04-01",
-                            "name": "lleventhubnamespace/lightlytics_eventhub",
-                            "dependsOn": ["lleventhubnamespace"]
+                            "name": "[concat(concat('lleventhubnamespace', uniqueString(subscription().subscriptionId)), '/lightlytics_eventhub')]",
+                            "dependsOn": [
+                                "[concat('Microsoft.EventHub/namespaces/lleventhubnamespace', uniqueString(subscription().subscriptionId))]"
+                            ]
                         }
                     ],
                     "outputs": {}
