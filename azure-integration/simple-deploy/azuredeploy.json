@@ -132,6 +132,59 @@
             ]
         },
         {
+            "type": "Microsoft.EventHub/namespaces/eventhubs/authorizationRules",
+            "apiVersion": "2017-04-01",
+            "name": "[concat('eventhubns-', uniqueString(resourceGroup().id), '/myeventhub/listenPolicy')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.EventHub/namespaces/eventhubs', concat('eventhubns-', uniqueString(resourceGroup().id)), 'myeventhub')]"
+            ],
+            "properties": {
+                "rights": [
+                    "Listen"
+                ]
+            }
+        },
+        {
+            "type": "Microsoft.Insights/diagnosticSettings",
+            "apiVersion": "2017-05-01-preview",
+            "name": "lightlytics_ds",
+            "dependsOn": [
+              "[resourceId('Microsoft.EventHub/namespaces/eventhubs', concat('eventhubns-', uniqueString(resourceGroup().id)), 'myeventhub')]"
+            ],
+            "properties": {
+              "name": "lightlytics_ds",
+              "workspaceId": null,
+              "eventHubAuthorizationRuleId": "[resourceId('Microsoft.EventHub/namespaces/eventhubs/authorizationRules', concat('eventhubns-', uniqueString(resourceGroup().id)), 'myeventhub', 'listenPolicy')]",
+              "eventHubName": "myeventhub",
+              "logs": [
+                {
+                  "category": "Administrative",
+                  "enabled": true
+                },
+                {
+                  "category": "Security",
+                  "enabled": true
+                },
+                {
+                  "category": "Alert",
+                  "enabled": true
+                },
+                {
+                  "category": "Policy",
+                  "enabled": true
+                },
+                {
+                  "category": "Autoscale",
+                  "enabled": true
+                }
+              ],
+              "metrics": []
+            }
+          },
+          
+
+        {
             "type": "Microsoft.Resources/deploymentScripts",
             "apiVersion": "2020-10-01",
             "name": "[concat('lightlytics-acknowlage-script-', parameters('newguid'))]",
